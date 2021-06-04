@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './temas.css';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ControleProvider } from './hooks/controle';
+import Inicio from './paginas/inicio';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ControleProvider>
+      <Inicio />
+    </ControleProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
