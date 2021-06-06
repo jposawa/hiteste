@@ -14,7 +14,7 @@ export default function ItemLista(props) {
     if(dadosItem.indeterminate){
       evento.target.checked = true;
     }
-    
+
     dadosItem.marcado = evento.target.checked;
     dadosItem.indeterminate = false;
     
@@ -31,7 +31,6 @@ export default function ItemLista(props) {
             checked = {marcado}
             indeterminate = {indeterminate}
           />
-          {/* <input id={id} type="checkbox" /> */}
 
           <label className={styles.etiquetaItem} htmlFor={id}>
             {name}
