@@ -10,104 +10,148 @@ export const ControleProvider = ({ children }) => {
   };
   const [dados, setDados] = useState();
 
-  const definePai = (item) =>{
+  const definePai = (item) => {
     item.caminho = item.caminho ? [...item.caminho] : [];
     item.filhosMarcados = 0;
 
-    if(item.children){
+    if (item.children) {
       Object.values(item.children).forEach(child => {
-        child.caminho = [...item.caminho,item.id];
+        child.caminho = [...item.caminho, item.id];
 
-        if(child.marcado){
+        if (child.marcado) {
           item.filhosMarcados++;
         }
 
-        if(child.children && Object.values(child.children).length > 0){
+        if (child.children && Object.values(child.children).length > 0) {
           definePai(child);
         }
       })
     }
 
-    item.marcado = item.filhosMarcados === Object.values(item.children).length;
-    item.indeterminate = item.filhosMarcados > 0 && item.filhosMarcados < Object.values(item.children).length;
+    item.marcado = Object.values(item.children).length > 0 && item.filhosMarcados === Object.values(item.children).length;
+    item.indeterminate = item.filhosMarcados > 0 && !item.marcado;
   }
 
-  const preparaDados = (dadosBrutos) =>{
-    if(dadosBrutos){
+  const preparaDados = (dadosBrutos) => {
+    if (dadosBrutos) {
       Object.values(dadosBrutos).forEach(dado => {
         definePai(dado);
       });
 
-      setDados({...dadosBrutos});
+      setDados({ ...dadosBrutos });
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     const _dadosLS = JSON.parse(localStorage.getItem(`${config.prefixoLS}dados`));
     // console.log(_dadosLS);
-    if(_dadosLS && Object.values(_dadosLS).length > 0){
-      setDados({..._dadosLS});
+    if (_dadosLS && Object.values(_dadosLS).length > 0) {
+      setDados({ ..._dadosLS });
     }
-    else{
+    else {
       // setDados({...data});
       preparaDados(data);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const salvaDados = () =>{
-    if(dados){
+  const salvaDados = () => {
+    if (dados) {
       localStorage.setItem(`${config.prefixoLS}dados`, JSON.stringify(dados));
     }
   }
 
-  useEffect(()=>{
-    if(dados && Object.values(dados).length > 0){
-      // salvaDados();
-      console.warn("Lembrar chamar salvaDados()");
+  useEffect(() => {
+    if (dados && Object.values(dados).length > 0) {
+      salvaDados();
+      // console.warn("Lembrar chamar salvaDados()");
     }
-  },[dados]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dados]);
 
-  const marcaTodosFilhos = (item) =>{
-    if(!item.children || Object.values(item.children).length === 0){
+  const marcaTodosFilhos = (item) => {
+    if (!item.children || Object.values(item.children).length === 0) {
       return;
     }
 
     item.filhosMarcados = item.marcado ? Object.values(item.children).length : 0;
+    item.indeterminate = false;
 
     Object.values(item.children).forEach(child => {
       child.marcado = item.marcado;
 
-      if(child.children && Object.values(child.children).length > 0){
+      if (child.children && Object.values(child.children).length > 0) {
         marcaTodosFilhos(child);
       }
     })
   }
 
-  const encontraItem = (dados, caminho) =>{
-    // let item = dados;
+  const encontraItem = (_dados, caminho) => {
+    // let item = _dados;
+    // const _modificador = marcado ? 1 : -1;
 
-    for(let i = 0; i < caminho.length; i++){
+    for (let i = 0; i < caminho.length; i++) {
       const _id = caminho[i];
+      // _dados.filhosMarcados += modificador;
+      _dados = Object.values(_dados).filter(dado => (dado.id === _id))[0];
+      // _dados.marcado = marcado;
+      // _dados.filhosMarcados += _modificador;
+      // _dados.marcado = _dados.filhosMarcados === Object.values(children).length;
+      // _dados.indeterminate = _dados.filhosMarcados > 0 && !_dados.marcado;
+      // console.log(_dados.filhosMarcados);
 
-      dados = Object.values(dados).filter(dado => (dado.id === _id))[0];
-
-      if(dados && i < caminho.length-1){
-        dados = dados.children;
+      if (_dados && i < caminho.length - 1) {
+        _dados = _dados.children;
       }
     }
 
-    return dados;
+    return _dados;
   }
 
-  const controleItem = (dadosItem) =>{
-    const _dados = {...dados};
-    const _modificador = dadosItem.marcado ? 1 : -1;
+  const atualizaPais = (_dados, caminho) => {
+    const _referencias = [];
 
-    let _item = encontraItem(_dados, [...dadosItem.caminho,dadosItem.id]);
+    caminho.forEach(_id => {
+      _dados = Object.values(_dados).filter(dado => (dado.id === _id))[0];
+
+      _referencias.push(_dados);
+
+      _dados = _dados.children;
+    });
+
+    for (let i = 0; i < _referencias.length; i++) {
+      const _ref = _referencias[i];
+      _ref.filhosMarcados = Object.values(_ref.children).filter(child => child.marcado).length;
+
+      if (_ref.filhosMarcados > 0) {
+        _ref.indeterminate = true;
+        _ref.marcado = true;
+
+        if (_ref.filhosMarcados >= Object.values(_ref.children).length) {
+          _ref.filhosMarcados = Object.values(_ref.children).length;
+          _ref.indeterminate = false;
+        }
+      }
+      else {
+        _ref.filhosMarcados = 0;
+        _ref.marcado = false;
+        _ref.indeterminate = false;
+      }
+
+    }
+  }
+
+  const controleItem = (dadosItem) => {
+    const _dados = { ...dados };
+    // const _modificador = dadosItem.marcado ? 1 : -1;
+
+    let _item = encontraItem(_dados, [...dadosItem.caminho, dadosItem.id]);
+
     marcaTodosFilhos(_item);
 
-    setDados({..._dados});
+    atualizaPais(_dados, dadosItem.caminho);
+
+    setDados({ ..._dados });
   }
 
   const valores = {

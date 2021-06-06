@@ -11,7 +11,12 @@ export default function ItemLista(props) {
   const {controleItem} = useControle();
 
   const selecionaItem = (evento) =>{
+    if(dadosItem.indeterminate){
+      evento.target.checked = true;
+    }
+    
     dadosItem.marcado = evento.target.checked;
+    dadosItem.indeterminate = false;
     
     controleItem(dadosItem);
   }
