@@ -44,12 +44,11 @@ export const ControleProvider = ({ children }) => {
 
   useEffect(() => {
     const _dadosLS = JSON.parse(localStorage.getItem(`${config.prefixoLS}dados`));
-    // console.log(_dadosLS);
+    
     if (_dadosLS && Object.values(_dadosLS).length > 0) {
       setDados({ ..._dadosLS });
     }
     else {
-      // setDados({...data});
       preparaDados(data);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,7 +63,6 @@ export const ControleProvider = ({ children }) => {
   useEffect(() => {
     if (dados && Object.values(dados).length > 0) {
       salvaDados();
-      // console.warn("Lembrar chamar salvaDados()");
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dados]);
@@ -124,7 +122,12 @@ export const ControleProvider = ({ children }) => {
 
         if (_ref.filhosMarcados >= Object.values(_ref.children).length) {
           _ref.filhosMarcados = Object.values(_ref.children).length;
-          _ref.indeterminate = false;
+          if(Object.values(_ref.children).filter(child => child.indeterminate).length > 0){
+            _ref.indeterminate = true;
+          }
+          else{
+            _ref.indeterminate = false;
+          }
         }
       }
       else {

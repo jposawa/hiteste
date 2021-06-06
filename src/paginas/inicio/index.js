@@ -2,7 +2,6 @@ import React from 'react';
 import ItemLista from '../../componentes/ItemLista';
 import { useControle } from '../../hooks/controle';
 
-// import data from '../../dados/data.json';
 import "antd/dist/antd.css";
 import styles from './styles.module.css';
 
