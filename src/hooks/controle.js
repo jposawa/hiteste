@@ -119,10 +119,13 @@ export const ControleProvider = ({ children }) => {
       _dados = _dados.children;
     });
 
+    _referencias.reverse();
+
     for (let i = 0; i < _referencias.length; i++) {
       const _ref = _referencias[i];
       _ref.filhosMarcados = Object.values(_ref.children).filter(child => child.marcado).length;
 
+      console.log(_ref.name, _ref.filhosMarcados);
       if (_ref.filhosMarcados > 0) {
         _ref.indeterminate = true;
         _ref.marcado = true;

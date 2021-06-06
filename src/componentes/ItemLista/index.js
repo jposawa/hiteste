@@ -39,7 +39,7 @@ export default function ItemLista(props) {
         
         {children && Object.values(children).length > 0 &&
           <button type="button" className={itemAberto ? styles.setaItemAberto : undefined} onClick={() => { setItemAberto(!itemAberto); }}>
-            &#10095;
+            <span>&#10095;</span>
         </button>
         }
       </p>
