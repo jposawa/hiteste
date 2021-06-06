@@ -1,0 +1,15 @@
+.corpoPagina{
+  position:absolute;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: auto;
+}
+
+.corpoPagina *{
+  transition: all 0.3s;
+}
