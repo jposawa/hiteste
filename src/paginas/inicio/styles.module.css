@@ -9,3 +9,7 @@
   align-items: center;
   overflow: auto;
 }
+
+.corpoPagina *{
+  transition: all 0.3s;
+}

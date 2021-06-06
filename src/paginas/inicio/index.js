@@ -3,7 +3,7 @@ import ItemLista from '../../componentes/ItemLista';
 import { useControle } from '../../hooks/controle';
 
 // import data from '../../dados/data.json';
-
+import "antd/dist/antd.css";
 import styles from './styles.module.css';
 
 export default function Inicio(){
@@ -14,9 +14,7 @@ export default function Inicio(){
       {dados && Object.values(dados).length > 0 && Object.values(dados).map(d => (
         <ItemLista
           key = {d.id}
-          id = {d.id}
-          name = {d.name}
-          children = {d.children}
+          dadosItem = {d}
         />
       ))}
     </div>
