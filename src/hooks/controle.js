@@ -87,18 +87,11 @@ export const ControleProvider = ({ children }) => {
   }
 
   const encontraItem = (_dados, caminho) => {
-    // let item = _dados;
-    // const _modificador = marcado ? 1 : -1;
+    
 
     for (let i = 0; i < caminho.length; i++) {
       const _id = caminho[i];
-      // _dados.filhosMarcados += modificador;
       _dados = Object.values(_dados).filter(dado => (dado.id === _id))[0];
-      // _dados.marcado = marcado;
-      // _dados.filhosMarcados += _modificador;
-      // _dados.marcado = _dados.filhosMarcados === Object.values(children).length;
-      // _dados.indeterminate = _dados.filhosMarcados > 0 && !_dados.marcado;
-      // console.log(_dados.filhosMarcados);
 
       if (_dados && i < caminho.length - 1) {
         _dados = _dados.children;
@@ -125,7 +118,6 @@ export const ControleProvider = ({ children }) => {
       const _ref = _referencias[i];
       _ref.filhosMarcados = Object.values(_ref.children).filter(child => child.marcado).length;
 
-      console.log(_ref.name, _ref.filhosMarcados);
       if (_ref.filhosMarcados > 0) {
         _ref.indeterminate = true;
         _ref.marcado = true;
@@ -146,7 +138,6 @@ export const ControleProvider = ({ children }) => {
 
   const controleItem = (dadosItem) => {
     const _dados = { ...dados };
-    // const _modificador = dadosItem.marcado ? 1 : -1;
 
     let _item = encontraItem(_dados, [...dadosItem.caminho, dadosItem.id]);
 
