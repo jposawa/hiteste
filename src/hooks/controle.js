@@ -78,6 +78,8 @@ export const ControleProvider = ({ children }) => {
     Object.values(item.children).forEach(child => {
       child.marcado = item.marcado;
 
+      // console.log(item.name, item.marcado, child.name, child.marcado);
+
       if (child.children && Object.values(child.children).length > 0) {
         marcaTodosFilhos(child);
       }
@@ -141,7 +143,7 @@ export const ControleProvider = ({ children }) => {
 
   const controleItem = (dadosItem) => {
     const _dados = { ...dados };
-
+    // console.log(dadosItem);
     let _item = encontraItem(_dados, [...dadosItem.caminho, dadosItem.id]);
 
     marcaTodosFilhos(_item);
