@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import {Checkbox} from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useControle } from '../../hooks/controle';
 
 import styles from './styles.module.css';
@@ -21,19 +20,22 @@ export default function ItemLista(props) {
     controleItem(dadosItem);
   }
 
+  useEffect(()=>{
+    // console.log(marcado);
+    const _campo = document.getElementById(id);
+
+    _campo.checked = marcado;
+    _campo.indeterminate = indeterminate;
+  },[id, marcado, indeterminate])
+
   return (
     <div className={styles.item}>
       <p>
         <span>
-          <Checkbox
-            id={id}
-            onChange={selecionaItem}  
-            checked = {marcado}
-            indeterminate = {indeterminate}
-          />
+          <input type="checkbox" id={id} onChange={selecionaItem} defaultChecked={marcado}/>
 
           <label className={styles.etiquetaItem} htmlFor={id}>
-            {name}
+            <span>{name}</span>
           </label>
         </span>
         
